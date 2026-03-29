@@ -1,21 +1,18 @@
-import {
-  Entity, PrimaryColumn, Column,
-  BeforeInsert,
-  } from 'typeorm';
-import {v7 as uuidv7} from 'uuid';
+import { Entity, PrimaryColumn, Column, BeforeInsert } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 
 @Entity()
-export class Puzzle = {
+export class Puzzle {
   @PrimaryColumn()
-  id: number;
+  puzzleId: string;
 
   @BeforeInsert()
   generateId(): void {
-    this.id=uuidv7();
+    this.puzzleId = uuidv7();
   }
-  @column()
+  @Column()
   minMoves: number;
 
-  @column()
+  @Column()
   content: string;
-};
+}

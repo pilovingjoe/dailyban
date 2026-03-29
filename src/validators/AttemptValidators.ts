@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const CreateAttemptParamsSchema = z.object({
   userId: z.string().transform(Number),
-  puzzleId: z.string().tranform(Number),
+  puzzleId: z.string().transform(Number),
 });
 
 export const CreateAttemptBodySchema = z.object({
@@ -13,16 +13,16 @@ export const CreateAttemptBodySchema = z.object({
 });
 
 export const GetAttemptsParamsSchema = z.object({
-  puzzleId: z.string().tranform(Number),
+  puzzleId: z.string().transform(Number),
 });
 
 export const GetAttemptsQuerySchema = z.object({
-  minTime: z.string().transform(Number).min(1, 'minTime must be greater than 0').optional(),
-  minMoves: z.string().transform(Number).min(1, 'minMoves must be greater than 0').optional(),
+  minTime: z.string().transform(Number).optional(),
+  minMoves: z.string().transform(Number).optional(),
 
 });
 
 export const GetAttemptParamsSchema = z.object({
-  userId: z.string().tranform(Number),
-  puzzleId: z.string().tranform(Number),
+  userId: z.string().transform(Number),
+  puzzleId: z.string().transform(Number),
 });

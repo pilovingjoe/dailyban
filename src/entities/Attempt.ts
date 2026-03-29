@@ -1,31 +1,28 @@
-import {
-  Entity, PrimaryColumn, Column,
-  BeforeInsert,
-  } from 'typeorm';
-import {v7 as uuidv7} from 'uuid';
+import { Entity, PrimaryColumn, Column, BeforeInsert } from 'typeorm';
+import { v7 as uuidv7 } from 'uuid';
 
 @Entity()
-export type Attempt = {
+export class Attempt {
   @PrimaryColumn()
-  id: number;
+  attemptId: string;
 
   @BeforeInsert()
   generateId(): void {
-    this.id=uuidv7();
+    this.attemptId = uuidv7();
   }
 
-  @column()
+  @Column()
   userId: number;
 
-  @column()
+  @Column()
   puzzleId: number;
 
-  @column()
+  @Column()
   moveCount: number;
 
-  @column()
+  @Column()
   solveTime: number;
 
-  @column({ default: false})
+  @Column({ default: false })
   firstAttempt: boolean;
-};
+}
