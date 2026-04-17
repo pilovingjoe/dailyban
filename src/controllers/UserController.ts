@@ -1,11 +1,12 @@
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { RegistrationSchema } from '../validators/authValidator.js';
-import { addUser } from '../models/UserModel.js';
+import { RegistrationSchema, GetUserSchema } from '../validators/authValidator.js';
+import { addUser, getUserByEmail} from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
+// import { Session } from '../express-session.d.js';
 
 // Mostly taken from slides
-async function registerUser(req: Request, res: Response): Promise<void> {
+export async function registerUser(req: Request, res: Response): Promise<void> {
   const result = RegistrationSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
@@ -26,7 +27,7 @@ async function registerUser(req: Request, res: Response): Promise<void> {
   }
 }
 
-async function logIn(req: Request, res: Response): Promise<void> {
+export async function logIn(req: Request, res: Response): Promise<void> {
   const result = RegistrationSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
@@ -60,7 +61,39 @@ async function logIn(req: Request, res: Response): Promise<void> {
   }
 }
 
-async function logOut(req: Request, res: Response): Promise<void> {
+export async function logOut(req: Request, res: Response): Promise<void> {
   await req.session.clearSession();
   res.sendStatus(204);
+}
+
+export async function getUserProfile(req: Request, res: Response): Promise<void> {
+  const result = GetUserSchema.safeParse(req.body);
+  if (!result.success) {
+    res.status(400).json(result.error.flatten());
+    return;
+  }
+
+  const  { userEmail }  = result.data;
+
+
+  try {
+    const user = await getUserByEmail(userEmail);
+    if (!user) {
+      res.sendStatus(403);
+      return;
+    }
+    res.json(
+      {
+        email: user.email,
+        averageScore: user.averageScore,
+        averageTime: user.averageTime,
+        completedPuzzles: user.completedPuzzles,
+        attempts: user.attempts
+      });
+
+  } catch(err){
+    console.error(err);
+    res.sendStatus(500);
+  }
+
 }
