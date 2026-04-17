@@ -1,14 +1,9 @@
 import express, { Express } from 'express';
 import './config.js'; // do not remove this line
 import { sessionMiddleware } from './sessionConfig.js';
-import 'dotenv/config';
-import session from 'express-session';
-import connectPgSimple from 'connect-pg-simple';
-import { registerUser, logIn, logOut, getUserProfile } from './controllers/UserController.js';
+import { registerUser, logIn, logOut } from './controllers/UserController.js';
 
 const app: Express = express();
-const { PORT, COOKIE_SECRET } = process.env;
-const PostgresStore = connectPgSimple(session);
 
 app.use(sessionMiddleware); // Setup session management middleware
 app.use(express.json()); // Setup JSON body parsing middleware
@@ -24,7 +19,16 @@ app.use(express.static('public', { extensions: ['html'] }));
 app.post('/users', registerUser);
 app.post('/login', logIn);
 app.delete('/sessions', logOut);
-app.get('/users/:userId', getUserProfile);
+// app.get('/users/:userId', getUserProfile);
+// app.get('/attempts/:userId', getAttemptHistory);
+// app.post('/attempts/:userId/:puzzleId', createAttempt);
+// app.get('/puzzles/:date', getPreviousPuzzle);
+// app.get('/puzzles/', getPreviousPuzzles);
+// app.get('/leaderboards/:date/speed/top', getTopSpeeds);
+// app.get('/leaderboards/:date/moveCount/top', getTopScore);
+// app.get('/leaderboards/:date/speed/near', getAdjacentSpeeds);
+// app.get('/leaderboards/:date/moveCount/near', getAdjacnetScore);
+//
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
