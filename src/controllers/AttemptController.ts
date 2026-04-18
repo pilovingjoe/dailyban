@@ -5,6 +5,7 @@ import {
   GetAttemptSchema,
 } from '../validators/AttemptValidator.js';
 import { getAttemptById, addAttempt } from '../models/AttemptModel.js';
+import { parseDatabaseError } from '../utils/db-utils.js';
 
 export async function createAttempt(req: Request, res: Response): Promise<void> {
   const paramsResult = CreateAttemptParamsSchema.safeParse(req.params);
@@ -21,10 +22,15 @@ export async function createAttempt(req: Request, res: Response): Promise<void> 
 
   const { userId, puzzleId } = paramsResult.data;
   const { moveCount, timeSpent, firstAttempt } = bodyResult.data;
+  try {
+    const attempt = await addAttempt(moveCount, timeSpent, userId, puzzleId, firstAttempt);
 
-  const attempt = await addAttempt(moveCount, timeSpent, userId, puzzleId, firstAttempt);
-
-  res.json({ attempt });
+    res.json({ attempt });
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
 }
 
 export async function getAttempt(req: Request, res: Response): Promise<void> {
@@ -34,7 +40,13 @@ export async function getAttempt(req: Request, res: Response): Promise<void> {
     return;
   }
   const attemptId = result.data.attemptId;
-  const attempt = await getAttemptById(attemptId);
+  try {
+    const attempt = await getAttemptById(attemptId);
 
-  res.json({ attempt });
+    res.json({ attempt });
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
 }

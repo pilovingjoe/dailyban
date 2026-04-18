@@ -2,13 +2,13 @@ import 'express-session';
 
 declare module 'express-session' {
   export interface Session {
-    clearSession(): Promise<void>; // DO NOT MODIFY THIS!
+    clearSession(): Promise<void>; // DO NOT MODIFY — provided by the starter
 
-    // NOTES: Add your app's custom session properties here:
+    // Add your app's custom properties below
     authenticatedUser?: {
       userId: string;
       email: string;
-      displayName: string;
+      // displayName: string;
     };
     isLoggedIn?: boolean;
     logInAttempts?: number;

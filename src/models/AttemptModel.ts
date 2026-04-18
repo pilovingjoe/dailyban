@@ -35,6 +35,7 @@ export async function addAttempt(
   newAttempt.solveTime = solveTime;
   newAttempt.user = await userRepository.findOne({ where: { userId } });
   newAttempt.puzzle = await puzzleRepository.findOne({ where: { puzzleId } });
+  newAttempt.firstAttempt = firstAttempt;
   //newPuzzle.leaderboard = new Leaderboard(); add when leaderboards work
 
   return attemptRepository.save(newAttempt);

@@ -1,7 +1,14 @@
 import express, { Express } from 'express';
 import './config.js'; // do not remove this line
 import { sessionMiddleware } from './sessionConfig.js';
-import { registerUser, logIn, logOut } from './controllers/UserController.js';
+import { registerUser, logIn, logOut, getUserProfile } from './controllers/UserController.js';
+import {
+  getPuzzle,
+  getTodaysPuzzle,
+  getPuzzles,
+  createPuzzle,
+} from './controllers/PuzzleController.js';
+import { getAttempt, createAttempt } from './controllers/AttemptController.js';
 
 const app: Express = express();
 
@@ -19,16 +26,17 @@ app.use(express.static('public', { extensions: ['html'] }));
 app.post('/users', registerUser);
 app.post('/login', logIn);
 app.delete('/sessions', logOut);
-// app.get('/users/:userId', getUserProfile);
-// app.get('/attempts/:userId', getAttemptHistory);
-// app.post('/attempts/:userId/:puzzleId', createAttempt);
-// app.get('/puzzles/:date', getPreviousPuzzle);
-// app.get('/puzzles/', getPreviousPuzzles);
+app.get('/users/:userId', getUserProfile);
+app.get('/attmpets/:attemptId', getAttempt);
+app.post('/attempts/:userId/:puzzleId', createAttempt);
+app.get('/puzzles/:date', getPuzzle);
+app.get('/puzzles/today', getTodaysPuzzle);
+app.get('/puzzles/', getPuzzles);
+app.post('/puzzles/', createPuzzle);
 // app.get('/leaderboards/:date/speed/top', getTopSpeeds);
 // app.get('/leaderboards/:date/moveCount/top', getTopScore);
 // app.get('/leaderboards/:date/speed/near', getAdjacentSpeeds);
 // app.get('/leaderboards/:date/moveCount/near', getAdjacnetScore);
-//
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);

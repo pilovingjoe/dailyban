@@ -1,4 +1,12 @@
-import { Entity, PrimaryColumn, Column, BeforeInsert, Relation, OneToMany, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  BeforeInsert,
+  Relation,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import { v7 as uuidv7 } from 'uuid';
 import { Attempt } from '../entities/Attempt.js';
 import { Puzzle } from '../entities/Puzzle.js';
@@ -23,14 +31,14 @@ export class User {
   passwordHash: string;
 
   @Column()
-  averageScore: number;
+  averageScore: number | undefined;
 
   @Column()
-  averageTime: number;
+  averageTime: number | undefined;
 
-  @ManyToMany(() => Puzzle, (puzzle)=>puzzle.finishedUsers)
+  @ManyToMany(() => Puzzle, (puzzle) => puzzle.finishedUsers)
   completedPuzzles: Relation<Puzzle>[];
 
-  @OneToMany(() => Attempt, (attempt) =>attempt.user)
-  attempts:Relation<Attempt>[];
+  @OneToMany(() => Attempt, (attempt) => attempt.user)
+  attempts: Relation<Attempt>[];
 }

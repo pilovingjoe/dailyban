@@ -7,6 +7,5 @@ export const RegistrationSchema = z.object({
 });
 
 export const GetUserSchema = z.object({
-  userEmail: z.string().email(),
+  userId: z.string(),
 });
-

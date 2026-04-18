@@ -5,11 +5,12 @@ declare module 'express-session' {
     clearSession(): Promise<void>; // DO NOT MODIFY — provided by the starter
 
     // Add your app's custom properties below
-    authenticatedUser: {
+    authenticatedUser?: {
       userId: string;
       email: string;
+      // displayName: string;
     };
-    isLoggedIn: boolean;
-    logInAttempts: number;
+    isLoggedIn?: boolean;
+    logInAttempts?: number;
   }
 }
