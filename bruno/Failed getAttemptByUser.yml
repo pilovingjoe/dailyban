@@ -1,0 +1,15 @@
+info:
+  name: Failed getAttemptByUser
+  type: http
+  seq: 20
+
+http:
+  method: GET
+  url: http://localhost:9812/attempts/user/019dadab-8e25-7738-9db6-fc21a0d9d5
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

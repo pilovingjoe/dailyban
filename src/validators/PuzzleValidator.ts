@@ -9,5 +9,10 @@ export const CreatePuzzleSchema = z.object({
 
 export const GetPuzzleSchema = z.object({
   //fixme: should be some form of z.string().tranform(Date), idk exactly though
+  date: z.string(),
+});
+
+export const GetPuzzleByIdSchema = z.object({
+  //fixme: should be some form of z.string().tranform(Date), idk exactly though
   date: z.string().transform(Date),
 });

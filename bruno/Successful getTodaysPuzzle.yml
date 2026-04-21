@@ -1,0 +1,15 @@
+info:
+  name: Successful getTodaysPuzzle
+  type: http
+  seq: 13
+
+http:
+  method: GET
+  url: http://localhost:9812/puzzles/today
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

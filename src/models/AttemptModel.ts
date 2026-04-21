@@ -36,6 +36,12 @@ export async function addAttempt(
   newAttempt.user = await userRepository.findOne({ where: { userId } });
   newAttempt.puzzle = await puzzleRepository.findOne({ where: { puzzleId } });
   newAttempt.firstAttempt = firstAttempt;
+  if (!newAttempt.puzzle || !newAttempt.user) {
+    throw new Error('This puzzle or user does not exist');
+  }
+  if (newAttempt.puzzle.minMoves > newAttempt.moveCount) {
+    throw new Error("This attempt's move count is lower than the minnimum for this puzzle");
+  }
   //newPuzzle.leaderboard = new Leaderboard(); add when leaderboards work
 
   return attemptRepository.save(newAttempt);

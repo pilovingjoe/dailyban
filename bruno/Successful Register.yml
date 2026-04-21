@@ -1,0 +1,22 @@
+info:
+  name: Successful Register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:9812/users
+  body:
+    type: json
+    data: |-
+      {
+        "email":"test@test.gov",
+        "password":"password"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

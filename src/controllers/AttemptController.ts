@@ -4,7 +4,7 @@ import {
   CreateAttemptBodySchema,
   GetAttemptSchema,
 } from '../validators/AttemptValidator.js';
-import { getAttemptById, addAttempt } from '../models/AttemptModel.js';
+import { addAttempt, getAttemptById } from '../models/AttemptModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 
 export async function createAttempt(req: Request, res: Response): Promise<void> {
@@ -35,11 +35,13 @@ export async function createAttempt(req: Request, res: Response): Promise<void> 
 
 export async function getAttempt(req: Request, res: Response): Promise<void> {
   const result = GetAttemptSchema.safeParse(req.params);
+
   if (!result.success) {
-    res.status(400).json({ error: result.error });
+    res.status(400).json({ erorr: result.error });
     return;
   }
-  const attemptId = result.data.attemptId;
+
+  const { attemptId } = result.data;
   try {
     const attempt = await getAttemptById(attemptId);
 

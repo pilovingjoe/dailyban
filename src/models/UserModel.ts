@@ -15,6 +15,13 @@ export async function getUserById(userId: string): Promise<User | null> {
   return userRepository.findOne({ where: { userId } });
 }
 
+export async function getUserWithAttempts(userId: string): Promise<User | null> {
+  return userRepository.findOne({
+    where: { userId },
+    relations: { attempts: true },
+  });
+}
+
 export async function addUser(email: string, passwordHash: string): Promise<User> {
   const newUser = new User();
   newUser.email = email;

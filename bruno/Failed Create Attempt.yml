@@ -1,0 +1,23 @@
+info:
+  name: Failed Create Attempt
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: http://localhost:9812/attempts/019dadab-8e25-7738-9db6-fc21a0d9d527/019dadc7-faf1-74d8-94d0-e632cff0cc8f
+  body:
+    type: json
+    data: |-
+      {
+        "moveCount":4,
+        "timeSpent":10,
+        "firstAttempt":false
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

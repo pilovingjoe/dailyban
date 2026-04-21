@@ -1,0 +1,15 @@
+info:
+  name: Successful getPuzzle
+  type: http
+  seq: 10
+
+http:
+  method: GET
+  url: http://localhost:9812/puzzles/2026-04-20
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

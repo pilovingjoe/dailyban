@@ -1,7 +1,7 @@
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
 import { RegistrationSchema, GetUserSchema } from '../validators/authValidator.js';
-import { addUser, getUserByEmail, getUserById } from '../models/UserModel.js';
+import { addUser, getUserByEmail, getUserById, getUserWithAttempts } from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 // import { Session } from '../express-session.d.js';
 
@@ -16,6 +16,11 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
   const { email, password } = result.data;
 
   try {
+    if (await getUserByEmail(email)) {
+      // User account already exists
+      res.sendStatus(403);
+      return;
+    }
     const passwordHash = await argon2.hash(password);
     const newUser = await addUser(email, passwordHash);
     console.log(newUser);
@@ -98,14 +103,24 @@ export async function getUserProfile(req: Request, res: Response): Promise<void>
   }
 }
 
-// export async function getAttemptHistory(req: Request: res: Response): Promise<void> {
-//   const result = GetUserSchema.safeParse(req.params);
-//   if (!result.success) {
-//     res.status(400).json(result.error.flatten());
-//     return;
-//   }
-//
-//   const { userId } result.data;
-//   try {
-//     const user = await getUserById(userId);
-// }
+export async function getUserAttempts(req: Request, res: Response): Promise<void> {
+  const result = GetUserSchema.safeParse(req.params);
+  if (!result.success) {
+    res.status(400).json(result.error.flatten());
+    return;
+  }
+
+  const { userId } = result.data;
+  try {
+    const user = await getUserWithAttempts(userId);
+    if (!user) {
+      res.sendStatus(403);
+      return;
+    }
+    res.json(user.attempts);
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
+}

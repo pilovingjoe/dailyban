@@ -11,12 +11,19 @@ export const CreateAttemptBodySchema = z.object({
   firstAttempt: z.boolean(),
 });
 
-// export const GetAttemptsQuerySchema = z.object({
-//   minTime: z.string().transform(Number).optional(),
-//   minMoves: z.string().transform(Number).optional(),
-//
-// });
+export const GetAttemptsQuerySchema = z.object({
+  minTime: z.string().transform(Number).optional(),
+  minMoves: z.string().transform(Number).optional(),
+});
+
+export const GetAttemptsByUserSchema = z.object({
+  userId: z.uuid(),
+});
+
+export const GetAttemptsByPuzzleSchema = z.object({
+  puzzleId: z.uuid(),
+});
 
 export const GetAttemptSchema = z.object({
-  attemptId: z.string(),
+  attemptId: z.uuid(),
 });

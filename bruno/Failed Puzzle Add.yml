@@ -1,0 +1,23 @@
+info:
+  name: Failed Puzzle Add
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: http://localhost:9812/puzzles
+  body:
+    type: json
+    data: |-
+      {
+         "content":"__#####_\n###___#_\n#XPB__#_\n###_BX#_\n#X##B_#_\n#_#_X_##\n#B_*BBX#\n#___X__#\n########",
+        "minMoves":5,
+        "date":"04-20-2026"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

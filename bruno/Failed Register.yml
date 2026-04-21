@@ -1,0 +1,22 @@
+info:
+  name: Failed Register
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: http://localhost:9812/users
+  body:
+    type: json
+    data: |-
+      {
+        "email":"test@test.gov",
+        "password":"pa"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
