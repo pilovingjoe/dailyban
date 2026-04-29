@@ -42,6 +42,7 @@ app.post('/attempts/:userId/:puzzleId', createAttempt);
 app.get('/attempts/:attemptId', getAttempt);
 app.get('/attempts/user/:userId', getUserAttempts);
 app.get('/attempts/puzzle/:date', getPuzzleAttempts);
+console.log('this is a test of git');
 // app.get('/leaderboards/:date/speed/top', getTopSpeeds);
 // app.get('/leaderboards/:date/moveCount/top', getTopScore);
 // app.get('/leaderboards/:date/speed/near', getAdjacentSpeeds);
