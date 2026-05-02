@@ -1,11 +1,11 @@
-import{ Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 type LeaderboardAttempt = {
     leaderboardId: string;
     attemptId: string;
     userId: string;
-    timeSpent: number;
     date: string;
+    timeSpent: number;
     moveCount: number;
 };
 
@@ -60,49 +60,64 @@ export const updateLeaderboard = (req: Request, res: Response) => {
 //Action #11
 export const getTopSpeeds = (req: Request, res: Response) => {
     const { date } = req.params;
-    const data = leaderboardAttempts
-        .filter((l) => l.date === date)
+    const topSpeeds = leaderboardAttempts
+        .filter((item) => item.date === date)
         .sort((a, b) => a.timeSpent - b.timeSpent);
 
-    return res.status(200).json(data);
+    return res.status(200).json({message: "Top speeds retrieved", data: topSpeeds,});
 };
 
 //Action #12
 export const getTopMoveCounts = (req: Request, res: Response) => {
-    const { date} = req.params;
-    const data = leaderboardAttempts
-        .filter((l) => l.date === date)
+    const { date } = req.params;
+
+    const topMoveCounts = leaderboardAttempts
+        .filter((item) => item.date === date)
         .sort((a, b) => a.moveCount - b.moveCount);
 
-    return res.status(200).json(data);
+    return res.status(200).json({message: "Top move counts retrieved", data: topMoveCounts,});
 };
 
 //Attempts #13
 export const getNearbySpeeds = (req: Request, res: Response) => {
     const { date } = req.params;
-    const userId = "user2";
+    const userId = req.session?.userId || "user2"; 
 
-    const sorted = leaderboardAttempts
-        .filter((l) => l.date === date)
+    if (!userId) {
+        return res.status(401).json({ error: "Not logged in" });
+    }
+    const sortedBySpeed = leaderboardAttempts
+        .filter((item) => item.date === date)
         .sort((a, b) => a.timeSpent - b.timeSpent);
 
-    const index = sorted.findIndex((l) => l.userId === userId);
-    const data = sorted.slice(Math.max(index - 1, 0), index +2);
-    return res.status(200).json(data);
+    const userIndex = sortedBySpeed.findIndex((item) => item.userId === userId);
+
+    if (userIndex === -1) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const nearbySpeeds = sortedBySpeed.slice(Math.max(userIndex - 1, 0), userIndex + 2);
+    return res.status(200).json({message: "Nearby speeds retrieved", data: nearbySpeeds,});
 };
 
 //Action #14
 export const getNearbyMoves = (req: Request, res: Response) => {
     const { date }  = req.params;
-    const userId = "user2";
+    const userId = req.session?.userId || "user2";
+    if(!userId) {
+        return res.status(401).json({error: "Not logged in"});
+    }
 
-    const sorted = leaderboardAttempts
-        .filter((l) => l.date === date)
+    const sortedByMoves = leaderboardAttempts
+        .filter((item) => item.date === date)
         .sort((a, b) => a.moveCount - b.moveCount);
 
-    const index = sorted.findIndex((l) => l.userId === userId);
+    const userIndex = sortedByMoves.findIndex((item) => item.userId === userId);
 
-    const data = sorted.slice(Math.max(index - 1, 0), index +2);
+    if (userIndex === -1) {
+        return res.status(404).json({ error: "User not found" });
+    }
 
-    return res.status(200).json(data);
+    const nearbyMoves = sortedByMoves.slice(Math.max(userIndex - 1, 0), userIndex + 2);
+    return res.status(200).json({message: "Nearby moves retrieved", data: nearbyMoves,});
 };

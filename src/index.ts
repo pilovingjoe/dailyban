@@ -17,6 +17,15 @@ import {
 } from './controllers/PuzzleController.js';
 import { createAttempt, getAttempt } from './controllers/AttemptController.js';
 
+import {
+  updateLeaderboard,
+  getTopSpeeds,
+  getTopMoveCounts,
+  getNearbySpeeds,
+  getNearbyMoves,
+} from './controllers/LeaderboardController.js';
+
+
 const app: Express = express();
 
 app.use(sessionMiddleware); // Setup session management middleware
@@ -42,6 +51,12 @@ app.post('/attempts/:userId/:puzzleId', createAttempt);
 app.get('/attempts/:attemptId', getAttempt);
 app.get('/attempts/user/:userId', getUserAttempts);
 app.get('/attempts/puzzle/:date', getPuzzleAttempts);
+
+app.patch('/leaderboards/:leaderboardId/:attemptId', updateLeaderboard);
+app.get('/leaderboards/:date/speed/top', getTopSpeeds);
+app.get('/leaderboards/:date/moveCount/top', getTopMoveCounts);
+app.get('/leaderboards/:date/speed/near', getNearbySpeeds);
+app.get('/leaderboards/:date/moveCount/near', getNearbyMoves);
 console.log('this is a test of git');
 // app.get('/leaderboards/:date/speed/top', getTopSpeeds);
 // app.get('/leaderboards/:date/moveCount/top', getTopScore);
