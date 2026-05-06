@@ -37,34 +37,11 @@ app.use(express.urlencoded({ extended: false })); // Setup urlencoded (HTML Form
 // This allows the client to access any file inside the `public` directory
 // Only put file that you actually want to be publicly accessibly in the `public` folder
 app.use(express.static('public', { extensions: ['html'] }));
+app.use(express.static('frontend/build'));
 
 // -- Routes --------------------------------------------------
 // Register your routes below this line
-<<<<<<< HEAD
-app.post('/users', registerUser);
-app.post('/login', logIn);
-app.delete('/sessions', logOut);
-app.get('/users/:userId', getUserProfile);
-app.post('/puzzles/', createPuzzle);
-app.get('/puzzles/today', getTodaysPuzzle);
-app.get('/puzzles/:date', getPuzzle);
-app.get('/puzzles/', getPuzzles);
-app.post('/attempts/:userId/:puzzleId', createAttempt);
-app.get('/attempts/:attemptId', getAttempt);
-app.get('/attempts/user/:userId', getUserAttempts);
-app.get('/attempts/puzzle/:date', getPuzzleAttempts);
 
-app.patch('/leaderboards/:leaderboardId/:attemptId', updateLeaderboard);
-app.get('/leaderboards/:date/speed/top', getTopSpeeds);
-app.get('/leaderboards/:date/moveCount/top', getTopMoveCounts);
-app.get('/leaderboards/:date/speed/near', getNearbySpeeds);
-app.get('/leaderboards/:date/moveCount/near', getNearbyMoves);
-console.log('this is a test of git');
-// app.get('/leaderboards/:date/speed/top', getTopSpeeds);
-// app.get('/leaderboards/:date/moveCount/top', getTopScore);
-// app.get('/leaderboards/:date/speed/near', getAdjacentSpeeds);
-// app.get('/leaderboards/:date/moveCount/near', getAdjacnetScore);
-=======
 app.post('/api/users', registerUser);
 app.post('/api/login', logIn);
 app.delete('/api/sessions', logOut);
@@ -78,11 +55,12 @@ app.post('/api/attempts/:userId/:puzzleId', createAttempt);
 app.get('/api/attempts/:attemptId', getAttempt);
 app.get('/api/attempts/user/:userId', getUserAttempts);
 app.get('/api/attempts/puzzle/:date', getPuzzleAttempts);
-// app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);
-// app.get('/api/leaderboards/:date/moveCount/top', getTopScore);
-// app.get('/api/leaderboards/:date/speed/near', getAdjacentSpeeds);
-// app.get('/api/leaderboards/:date/moveCount/near', getAdjacentScore);
->>>>>>> fc58516 (Developed Frontend sans leaderboards)
+
+app.patch('/api/leaderboards/:leaderboardId/:attemptId', updateLeaderboard);
+app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);
+app.get('/api/leaderboards/:date/moveCount/top', getTopMoveCounts);
+app.get('/api/leaderboards/:date/speed/near', getNearbySpeeds);
+app.get('/api/leaderboards/:date/moveCount/near', getNearbyMoves);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
