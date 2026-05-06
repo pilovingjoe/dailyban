@@ -1,6 +1,6 @@
 import argon2 from 'argon2';
 import { Request, Response } from 'express';
-import { RegistrationSchema, GetUserSchema } from '../validators/authValidator.js';
+import { RegistrationSchema, LoginSchema, GetUserSchema } from '../validators/authValidator.js';
 import { addUser, getUserByEmail, getUserById, getUserWithAttempts } from '../models/UserModel.js';
 import { parseDatabaseError } from '../utils/db-utils.js';
 // import { Session } from '../express-session.d.js';
@@ -13,7 +13,7 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { email, password } = result.data;
+  const { email, password, displayName } = result.data;
 
   try {
     if (await getUserByEmail(email)) {
@@ -22,7 +22,7 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
       return;
     }
     const passwordHash = await argon2.hash(password);
-    const newUser = await addUser(email, passwordHash);
+    const newUser = await addUser(email, passwordHash, displayName);
     console.log(newUser);
     res.sendStatus(201);
   } catch (err) {
@@ -33,9 +33,11 @@ export async function registerUser(req: Request, res: Response): Promise<void> {
 }
 
 export async function logIn(req: Request, res: Response): Promise<void> {
-  const result = RegistrationSchema.safeParse(req.body);
+  console.log('got to login');
+  const result = LoginSchema.safeParse(req.body);
   if (!result.success) {
     res.status(400).json(result.error.flatten());
+    console.log(result.error.flatten());
     return;
   }
 
@@ -59,7 +61,10 @@ export async function logIn(req: Request, res: Response): Promise<void> {
     req.session.authenticatedUser = {
       userId: user.userId,
       email: user.email,
-      // displayName: user.displayName,
+      displayName: user.displayName,
+      averageScore: user.averageScore,
+      averageTime: user.averageTime,
+      numCompleted: user.numCompleted,
     };
     req.session.isLoggedIn = true;
 
@@ -91,7 +96,7 @@ export async function getUserProfile(req: Request, res: Response): Promise<void>
       return;
     }
     res.json({
-      email: user.email,
+      displayName: user.displayName,
       averageScore: user.averageScore,
       averageTime: user.averageTime,
       completedPuzzles: user.completedPuzzles,
@@ -123,4 +128,12 @@ export async function getUserAttempts(req: Request, res: Response): Promise<void
     const databaseErrorMessage = parseDatabaseError(err);
     res.status(500).json(databaseErrorMessage);
   }
+}
+
+export function getMe(req: Request, res: Response): void {
+  if (!req.session.isLoggedIn) {
+    res.sendStatus(401);
+    return;
+  }
+  res.json(req.session.authenticatedUser);
 }

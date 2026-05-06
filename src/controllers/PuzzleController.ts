@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Puzzle } from '../entities/Puzzle.js'
 import { GetPuzzleSchema, CreatePuzzleSchema } from '../validators/PuzzleValidator.js';
 import {
   getAllPuzzles,
@@ -31,7 +32,11 @@ export async function getPuzzle(req: Request, res: Response): Promise<void> {
   try {
     const puzzle = await getPuzzleByDate(puzzleDate);
 
-    res.json({ puzzle });
+    res.json({
+      puzzleId: puzzle.puzzleId,
+      minMoves: puzzle.minMoves,
+      content: puzzle.content,
+    });
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
@@ -43,9 +48,13 @@ export async function getTodaysPuzzle(req: Request, res: Response): Promise<void
   let puzzleDate = new Date();
   puzzleDate = new Date(puzzleDate.setUTCHours(0, 0, 0, 0));
   try {
-    const puzzle = await getPuzzleByDate(puzzleDate);
+    const puzzle: Puzzle = await getPuzzleByDate(puzzleDate);
 
-    res.json({ puzzle });
+    res.json({
+      puzzleId: puzzle.puzzleId,
+      minMoves: puzzle.minMoves,
+      content: puzzle.content,
+    });
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);

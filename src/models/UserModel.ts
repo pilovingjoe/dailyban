@@ -22,10 +22,15 @@ export async function getUserWithAttempts(userId: string): Promise<User | null> 
   });
 }
 
-export async function addUser(email: string, passwordHash: string): Promise<User> {
+export async function addUser(
+  email: string,
+  passwordHash: string,
+  displayName: string,
+): Promise<User> {
   const newUser = new User();
   newUser.email = email;
   newUser.passwordHash = passwordHash;
+  newUser.displayName = displayName;
   newUser.averageScore = -1;
   newUser.averageTime = -1;
   // userId is generated automatically by @BeforeInsert

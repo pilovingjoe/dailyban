@@ -24,6 +24,10 @@ export class User {
     this.userId = uuidv7();
     this.createdAt = new Date();
   }
+
+  @Column()
+  displayName: string;
+
   @Column()
   email: string;
 
@@ -31,10 +35,13 @@ export class User {
   passwordHash: string;
 
   @Column()
-  averageScore: number | undefined;
+  averageScore: number = -1;
 
   @Column()
-  averageTime: number | undefined;
+  averageTime: number = -1;
+
+  @Column()
+  numCompleted: number = 0;
 
   @ManyToMany(() => Puzzle, (puzzle) => puzzle.finishedUsers)
   completedPuzzles: Relation<Puzzle>[];

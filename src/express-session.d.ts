@@ -8,7 +8,10 @@ declare module 'express-session' {
     authenticatedUser?: {
       userId: string;
       email: string;
-      // displayName: string;
+      displayName: string;
+      averageScore: number;
+      averageTime: number;
+      numCompleted: number;
     };
     isLoggedIn?: boolean;
     logInAttempts?: number;

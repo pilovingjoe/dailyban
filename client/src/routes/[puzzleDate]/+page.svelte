@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { auth } from '$lib/auth.svelte';
   import { api } from '$lib/api';
   import { toast } from '$lib/toast.svelte';
@@ -146,20 +147,14 @@
       let timeSpent = Math.floor((time.getTime() - startTime.getTime()) / 1000);
       // let firstAttempt = await api.get<boolean>('/puzzles/'+userId);
       let firstAttempt = false;
-      toast.info('userId - ' + userId);
-      toast.info('puzzleId - ' + puzzleId);
 
-      let result = await api.post('/attempts/' + userId + '/' + puzzleId, {
-        moveCount,
-        timeSpent,
-        firstAttempt,
-      });
-      if (!result.ok) {
+      let result = await api.post('/attempts/' + userId + '/' + puzzleId, {moveCount, timeSpent, firstAttempt });
+      if(!result.ok){
         toast.error('Unable to create an attempt');
         return;
       }
-      toast.success('Successful attempt added');
-      content = [];
+      toast.success("Successful attempt added");
+      content=[];
       let row: string[] = [];
       let x = 0;
       let y = 0;
@@ -255,7 +250,8 @@
   });
 
   onMount(async () => {
-    const result = await api.get<Puzzle>('/puzzles/today');
+    const date = page.params.puzzleDate;
+    const result = await api.get<Puzzle>(`/puzzles/${date}`);
 
     if (result.ok) {
       puzzle = result.data;
@@ -291,11 +287,16 @@
 
 <div class="holy-grail-grid">
   <header class="header">
-    <div class="column"><a href="https://www.github.com/pilovingjoe">Github</a></div>
+    <div class="column">
+      <a href="https://www.github.com/pilovingjoe">Github</a>
+      <br/>
+      <a href="/calendar">Calendar</a>
+    </div>
     <div class="column" style="width:50%">
       <h1>
         <a href="https://www.google.com">&lt;-</a
-        >&Tab;{startTime.getUTCFullYear()}-{startTime.getUTCMonth() + 1}-{startTime.getUTCDate()}
+        >&Tab;{startTime.getUTCFullYear()}-{startTime.getUTCMonth() +
+          1}-{startTime.getUTCDate()}&Tab;<a href="https://www.google.com">-></a>
       </h1>
     </div>
     <div class="column">
