@@ -30,6 +30,7 @@ export async function addAttempt(
   puzzleId: string,
   firstAttempt: boolean,
 ): Promise<Attempt | null> {
+  computeAvgs(userId, moveCount, solveTime);
   const newAttempt = new Attempt();
   newAttempt.moveCount = moveCount;
   newAttempt.solveTime = solveTime;
@@ -43,6 +44,12 @@ export async function addAttempt(
     throw new Error("This attempt's move count is lower than the minnimum for this puzzle");
   }
   //newPuzzle.leaderboard = new Leaderboard(); add when leaderboards work
-
   return attemptRepository.save(newAttempt);
+}
+async function computeAvgs(userId: string, moveCount: number, solveTime: number): Promise<void> {
+  const user = await userRepository.findOne({ where: { userId } });
+  const numComplete = user.numCompleted;
+  user.averageScore = (user.averageScore * numComplete + moveCount) / (numComplete + 1);
+  user.averageTime = (user.averageTime * numComplete + solveTime) / (numComplete + 1);
+  user.numCompleted++;
 }

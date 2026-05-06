@@ -3,6 +3,7 @@ import './config.js'; // do not remove this line
 import { sessionMiddleware } from './sessionConfig.js';
 import {
   registerUser,
+  getMe,
   logIn,
   logOut,
   getUserProfile,
@@ -39,6 +40,7 @@ app.use(express.static('public', { extensions: ['html'] }));
 
 // -- Routes --------------------------------------------------
 // Register your routes below this line
+<<<<<<< HEAD
 app.post('/users', registerUser);
 app.post('/login', logIn);
 app.delete('/sessions', logOut);
@@ -62,6 +64,25 @@ console.log('this is a test of git');
 // app.get('/leaderboards/:date/moveCount/top', getTopScore);
 // app.get('/leaderboards/:date/speed/near', getAdjacentSpeeds);
 // app.get('/leaderboards/:date/moveCount/near', getAdjacnetScore);
+=======
+app.post('/api/users', registerUser);
+app.post('/api/login', logIn);
+app.delete('/api/sessions', logOut);
+app.get('/api/me', getMe);
+app.get('/api/users/:userId', getUserProfile);
+app.post('/api/puzzles/', createPuzzle);
+app.get('/api/puzzles/today', getTodaysPuzzle);
+app.get('/api/puzzles/:date', getPuzzle);
+app.get('/api/puzzles/', getPuzzles);
+app.post('/api/attempts/:userId/:puzzleId', createAttempt);
+app.get('/api/attempts/:attemptId', getAttempt);
+app.get('/api/attempts/user/:userId', getUserAttempts);
+app.get('/api/attempts/puzzle/:date', getPuzzleAttempts);
+// app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);
+// app.get('/api/leaderboards/:date/moveCount/top', getTopScore);
+// app.get('/api/leaderboards/:date/speed/near', getAdjacentSpeeds);
+// app.get('/api/leaderboards/:date/moveCount/near', getAdjacentScore);
+>>>>>>> fc58516 (Developed Frontend sans leaderboards)
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);
