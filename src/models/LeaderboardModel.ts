@@ -1,5 +1,5 @@
 import { AppDataSource } from "../dataSource.js";
-import { LeaderboardAttempt } from "../entities/LeaderboardAttempt.js";
+import { LeaderboardAttempt } from "../entities/Leaderboard.js";
 import { User } from '../entities/User.js';
 import { Attempt } from '../entities/Attempt.js';
  
@@ -36,7 +36,7 @@ export async function getLeaderboardAttemptByUser(
         .leftJoinAndSelect('l.user', 'user')
         .leftJoinAndSelect('l.attempt', 'attempt')
         .where('l.date = :date', { date })
-        .andwhere('l.userId = :userId', { userId })
+        .andWhere('l.userId = :userId', { userId })
         .getOne();
 }
 

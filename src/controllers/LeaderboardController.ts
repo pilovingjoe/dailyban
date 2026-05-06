@@ -81,7 +81,7 @@ export const getTopMoveCounts = (req: Request, res: Response) => {
 //Attempts #13
 export const getNearbySpeeds = (req: Request, res: Response) => {
     const { date } = req.params;
-    const userId = req.session?.userId || "user2"; 
+    const userId = (req.session as any)?.userId || "user2"; 
 
     if (!userId) {
         return res.status(401).json({ error: "Not logged in" });
@@ -103,7 +103,7 @@ export const getNearbySpeeds = (req: Request, res: Response) => {
 //Action #14
 export const getNearbyMoves = (req: Request, res: Response) => {
     const { date }  = req.params;
-    const userId = req.session?.userId || "user2";
+    const userId = (req.session as any)?.userId || "user2";
     if(!userId) {
         return res.status(401).json({error: "Not logged in"});
     }
