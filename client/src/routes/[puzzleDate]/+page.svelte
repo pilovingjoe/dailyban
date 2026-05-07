@@ -8,7 +8,7 @@
   import playerUrl from '$lib/img/player.png';
   import targetUrl from '$lib/img/target.png';
   import targetBoxUrl from '$lib/img/targetBox.png';
-  import { beforeNavigate, afterNavigate } from '$app/navigation';
+  import { onMount } from 'svelte';
 
   interface Puzzle {
     puzzleId: string;
@@ -45,7 +45,7 @@
   let submitting = $state(false);
   let loginDiv: boolean = $state(false);
   let regDiv: boolean = $state(false);
-  let startTime = new Date();
+  let startTime = $state(new Date());
   let time = $state(startTime);
   let puzzle: Puzzle | null = $state(null);
   let content: number[][] = $state([]);
@@ -188,6 +188,8 @@
       let row: number[] = [];
       let x = 0;
       let y = 0;
+      moveCount = 0;
+      startTime = new Date();
       for (var char of puzzle.content) {
         if (char === '\n') {
           content.push(row);
@@ -278,7 +280,7 @@
   }
 
   // Took this function from the svelte docs, to update time since puzzle started and til next puzzle
-  afterNavigate(() => {
+  onMount(() => {
     const interval = setInterval(() => {
       time = new Date();
     }, 1000);
@@ -288,7 +290,7 @@
     };
   });
 
-  afterNavigate(async () => {
+  onMount(async () => {
     date = page.params.puzzleDate;
     if (date) {
       let temp: string[] = date.split('-');
@@ -336,6 +338,8 @@
       <a href="https://www.github.com/pilovingjoe/dailyban">Github</a>
       <br />
       <a href="/calendar">Calendar</a>
+      <br/>
+      <a href="/">Today's puzzle</a>
     </div>
     <div class="column" style="width:50%">
       <h1>

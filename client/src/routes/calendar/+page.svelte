@@ -11,7 +11,7 @@
   let loginDiv: boolean = $state(false);
   let regDiv: boolean = $state(false);
   let startTime: Date = new Date();
-  let time: Date = startTime;
+  let time: Date = $state(startTime);
 
   onMount(() => {
     const interval = setInterval(() => {
@@ -68,12 +68,24 @@
     auth.refresh();
   }
 
-  onMount(async () => {});
+  onMount(() => {
+    const interval = setInterval(() => {
+      time = new Date();
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  });
 </script>
 
 <div class="holy-grail-grid">
   <header class="header">
-    <div class="column"><a href="https://www.github.com/pilovingjoe">Github</a></div>
+    <div class="column">
+      <a href="https://www.github.com/pilovingjoe">Github</a>
+      <br/>
+      <a href="/">Today's puzzle</a>
+      </div>
     <div class="column" style="width:50%">
       <h1>Calendar</h1>
     </div>
@@ -154,14 +166,13 @@
       </div>
     {/if}
     <br />
-    <hr />
     <div class="calendar">
       <div class="month">
-        <div class="label">January</div>
+        <div class="label" style="background-color: #89b4fa;">January</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-01-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-01-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-01-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -169,11 +180,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">February</div>
+        <div class="label"style="background-color: #f5c2e7;">February</div>
         <div class="weeks">
           {#each { length: 28 } as _, i}
             <div class="day">
-              {#if (new Date('2026-02-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-02-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-02-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -181,11 +192,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">March</div>
+        <div class="label"style="background-color: #a6e3a1;">March</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-03-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-03-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-03-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -193,11 +204,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">April</div>
+        <div class="label"style="background-color: #cba6f7;">April</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
             <div class="day">
-              {#if (new Date('2026-04-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-04-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-04-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -205,11 +216,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">May</div>
+        <div class="label"style="background-color: #94e2d5;">May</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-05-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-05-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-05-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -217,11 +228,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">June</div>
+        <div class="label"style="background-color: #89dceb;">June</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
             <div class="day">
-              {#if (new Date('2026-06-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-06-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-06-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -229,11 +240,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">July</div>
+        <div class="label"style="background-color: #74c7ec;">July</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-07-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-07-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-07-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -241,11 +252,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">August</div>
+        <div class="label"style="background-color: #f38ba8;">August</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-08-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-08-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-08-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -253,11 +264,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">September</div>
+        <div class="label"style="background-color: #eba0ac;">September</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
             <div class="day">
-              {#if (new Date('2026-09-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-09-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-09-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -265,11 +276,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">October</div>
+        <div class="label"style="background-color: #fab387;">October</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-10-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-10-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-10-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -277,11 +288,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">November</div>
+        <div class="label"style="background-color: #f9e2af;">November</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
             <div class="day">
-              {#if (new Date('2026-11-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-11-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-11-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -289,11 +300,11 @@
         </div>
       </div>
       <div class="month">
-        <div class="label">December</div>
+        <div class="label"style="background-color: #b4befe;">December</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
             <div class="day">
-              {#if (new Date('2026-12-' + (i + 1)).getTime() < new Date().getTime())}
+              {#if new Date('2026-12-' + (i + 1)).getTime() < new Date().getTime()}
                 <a href={'2026-12-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
               {/if}
             </div>
@@ -303,7 +314,7 @@
     </div>
   </main>
 
-  <aside class="left-sidebar">Leaderboards go here</aside>
+  <aside class="left-sidebar"></aside>
   <aside class="right-sidebar">
     {#if auth.user}
       <h2>Welcome {auth.user.displayName}</h2>

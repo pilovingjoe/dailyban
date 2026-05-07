@@ -40,7 +40,7 @@
   let submitting = $state(false);
   let loginDiv: boolean = $state(false);
   let regDiv: boolean = $state(false);
-  let startTime = new Date();
+  let startTime = $state(new Date());
   let time = $state(startTime);
   let puzzle: Puzzle | null = $state(null);
   let content: number[][] = $state([]);
@@ -153,6 +153,7 @@
   }
 
   async function checkSolution() {
+    // If we see a box not on target, it is not a solution
     for (let line of content) for (let char of line) if (char === BOX) return;
 
     if (auth.user && puzzle) {
@@ -183,6 +184,8 @@
       let row: number[] = [];
       let x = 0;
       let y = 0;
+      moveCount = 0;
+      startTime = new Date();
       for (var char of puzzle.content) {
         if (char === '\n') {
           content.push(row);
