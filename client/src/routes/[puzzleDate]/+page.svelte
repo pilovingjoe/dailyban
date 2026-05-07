@@ -52,6 +52,39 @@
   let pos = { x: 0, y: 0 };
   initInput();
 
+  function resetPuzzle(){
+    if (puzzle) {
+      content = [];
+      let row: number[] = [];
+      let x = 0;
+      let y = 0;
+      moveCount = 0;
+      startTime = new Date();
+      for (var char of puzzle.content) {
+        if (char === '\n') {
+          content.push(row);
+          y++;
+          row = [];
+          x = 0;
+        } else {
+          if (char === '_') row.push(EMP);
+          if (char === '#') row.push(WALL);
+          if (char === 'B') row.push(BOX);
+          if (char === 'X') row.push(TARGET);
+          if (char === '*') row.push(TARGETBOX);
+          if (char === 'P') {
+            row.push(PLAYER);
+            pos.x = x;
+            pos.y = y;
+          }
+          x++;
+        }
+      }
+      content.push(row);
+    }
+
+  }
+
   function move(dir: number) {
     // move right
     if (dir === 1) {
@@ -183,35 +216,7 @@
     } else {
       toast.info('Puzzle completed, but attempt not logged, login to save scores');
     }
-    if (puzzle) {
-      content = [];
-      let row: number[] = [];
-      let x = 0;
-      let y = 0;
-      moveCount = 0;
-      startTime = new Date();
-      for (var char of puzzle.content) {
-        if (char === '\n') {
-          content.push(row);
-          y++;
-          row = [];
-          x = 0;
-        } else {
-          if (char === '_') row.push(EMP);
-          if (char === '#') row.push(WALL);
-          if (char === 'B') row.push(BOX);
-          if (char === 'X') row.push(TARGET);
-          if (char === '*') row.push(TARGETBOX);
-          if (char === 'P') {
-            row.push(PLAYER);
-            pos.x = x;
-            pos.y = y;
-          }
-          x++;
-        }
-      }
-      content.push(row);
-    }
+    resetPuzzle();
   }
 
   function initInput(): void {
@@ -466,6 +471,62 @@
 
   <aside class="left-sidebar">
     <!-- Leaderboards go here -->
+    {#if !loginDiv && !regDiv}
+      <div class="nav">
+        <button
+          type="button"
+          class="navBut"
+          style="grid-column-start: 2;"
+          onclick={() => {
+            move(4);
+          }}>Up</button
+        >
+        <br />
+        <button
+          type="button"
+          class="navBut"
+          style="grid-row-start: 2;"
+          onclick={() => {
+            move(3);
+          }}>Left</button
+        >
+        <button
+          type="button"
+          class="navBut"
+          style="
+          grid-column-start: 3;
+          grid-row-start: 2;
+        "
+          onclick={() => {
+            move(1);
+          }}>Right</button
+        >
+        <br />
+        <button
+          type="button"
+          class="navBut"
+          style="
+          grid-column-start: 2;
+          grid-row-start: 3;
+        "
+          onclick={() => {
+            move(2);
+          }}>Down</button
+        >
+      </div>
+      <br />
+      <br />
+      <button
+        type="button"
+        class="navBut"
+        style="
+          background-color: #f38ba8
+        "
+        onclick={() => {
+          resetPuzzle();
+        }}>Reset</button
+      >
+    {/if}
   </aside>
   <aside class="right-sidebar">
     {#if auth.user}
