@@ -327,15 +327,7 @@
     </div>
     <div class="column" style="width:50%">
       <h1>
-        <a
-          href={'/' +
-            time.getUTCFullYear() +
-            '-' +
-            (time.getUTCMonth() + 1).toString().padStart(2, '0') +
-            '-' +
-            (time.getUTCDate() - 1).toString().padStart(2, '0')}
-          data-sveltekit-reload>&lt;-</a
-        >&Tab;{startTime.getUTCFullYear()}-{(startTime.getUTCMonth() + 1)
+        &Tab;{startTime.getUTCFullYear()}-{(startTime.getUTCMonth() + 1)
           .toString()
           .padStart(2, '0')}-{startTime.getUTCDate().toString().padStart(2, '0')}
       </h1>

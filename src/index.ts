@@ -15,6 +15,7 @@ import {
   getPuzzles,
   createPuzzle,
   getPuzzleAttempts,
+  deletePuzzle,
 } from './controllers/PuzzleController.js';
 import { createAttempt, getAttempt } from './controllers/AttemptController.js';
 
@@ -25,7 +26,6 @@ import {
   getNearbySpeeds,
   getNearbyMoves,
 } from './controllers/LeaderboardController.js';
-
 
 const app: Express = express();
 
@@ -55,6 +55,7 @@ app.post('/api/attempts/:userId/:puzzleId', createAttempt);
 app.get('/api/attempts/:attemptId', getAttempt);
 app.get('/api/attempts/user/:userId', getUserAttempts);
 app.get('/api/attempts/puzzle/:date', getPuzzleAttempts);
+app.delete('/api/puzzles/:date', deletePuzzle);
 
 app.patch('/api/leaderboards/:leaderboardId/:attemptId', updateLeaderboard);
 app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);

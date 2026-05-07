@@ -75,9 +75,7 @@
   <header class="header">
     <div class="column"><a href="https://www.github.com/pilovingjoe">Github</a></div>
     <div class="column" style="width:50%">
-      <h1>
-        Calendar
-      </h1>
+      <h1>Calendar</h1>
     </div>
     <div class="column">
       {#if auth.user}
@@ -162,7 +160,11 @@
         <div class="label">January</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-01-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-01-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-01-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -170,7 +172,11 @@
         <div class="label">February</div>
         <div class="weeks">
           {#each { length: 28 } as _, i}
-            <div class="day"><a href={"2026-02-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-02-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-02-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -178,7 +184,11 @@
         <div class="label">March</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-03-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-03-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-03-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -186,7 +196,11 @@
         <div class="label">April</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
-            <div class="day"><a href={"2026-04-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-04-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-04-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -194,7 +208,11 @@
         <div class="label">May</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-05-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-05-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-05-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -202,7 +220,11 @@
         <div class="label">June</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
-            <div class="day"><a href={"2026-06-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-06-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-06-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -210,7 +232,11 @@
         <div class="label">July</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-07-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-07-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-07-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -218,7 +244,11 @@
         <div class="label">August</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-08-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-08-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-08-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -226,7 +256,11 @@
         <div class="label">September</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
-            <div class="day"><a href={"2026-09-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-09-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-09-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -234,7 +268,11 @@
         <div class="label">October</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-10-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-10-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-10-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -242,7 +280,11 @@
         <div class="label">November</div>
         <div class="weeks">
           {#each { length: 30 } as _, i}
-            <div class="day"><a href={"2026-11-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-11-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-11-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>
@@ -250,7 +292,11 @@
         <div class="label">December</div>
         <div class="weeks">
           {#each { length: 31 } as _, i}
-            <div class="day"><a href={"2026-12-"+(i+1).toString().padStart(2,'0')}> {i+1}</a></div>
+            <div class="day">
+              {#if (new Date('2026-12-' + (i + 1)).getTime() < new Date().getTime())}
+                <a href={'2026-12-' + (i + 1).toString().padStart(2, '0')}> {i + 1}</a>
+              {/if}
+            </div>
           {/each}
         </div>
       </div>

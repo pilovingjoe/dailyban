@@ -10,6 +10,11 @@ export async function getAllPuzzles(): Promise<Puzzle[]> {
 export async function getPuzzleByDate(date: Date): Promise<Puzzle | null> {
   return puzzleRepository.findOne({ where: { date } });
 }
+export async function deletePuzzleByDate(date: Date): Promise<void> {
+  const puzzle = await puzzleRepository.findOne({ where: { date } });
+  if (!puzzle) return;
+  await puzzleRepository.remove(puzzle);
+}
 
 export async function getPuzzleAttemptsDate(date: Date): Promise<Puzzle | null> {
   return puzzleRepository.findOne({ where: { date }, relations: { attempts: true } });

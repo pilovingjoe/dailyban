@@ -3,12 +3,12 @@
   import { auth } from '$lib/auth.svelte';
   import { api } from '$lib/api';
   import { toast } from '$lib/toast.svelte';
-  import { onMount } from 'svelte';
   import wallUrl from '$lib/img/wall.png';
   import boxUrl from '$lib/img/box.png';
   import playerUrl from '$lib/img/player.png';
   import targetUrl from '$lib/img/target.png';
   import targetBoxUrl from '$lib/img/targetBox.png';
+  import { beforeNavigate, afterNavigate } from '$app/navigation';
 
   interface Puzzle {
     puzzleId: string;
@@ -278,7 +278,7 @@
   }
 
   // Took this function from the svelte docs, to update time since puzzle started and til next puzzle
-  onMount(() => {
+  afterNavigate(() => {
     const interval = setInterval(() => {
       time = new Date();
     }, 1000);
@@ -288,7 +288,7 @@
     };
   });
 
-  onMount(async () => {
+  afterNavigate(async () => {
     date = page.params.puzzleDate;
     if (date) {
       let temp: string[] = date.split('-');
@@ -339,27 +339,8 @@
     </div>
     <div class="column" style="width:50%">
       <h1>
-        <a
-          href={'/' +
-            year +
-            '-' +
-            month.padStart(2, '0') +
-            '-' +
-            (+day - 1).toString().padStart(2, '0')}
-          data-sveltekit-reload>&lt;-</a
-        >
         &Tab; {date} &Tab;
-        {#if page.params.puzzleDate && !(new Date(page.params.puzzleDate).getTime() >= new Date().getTime() - 24 * 60 * 60 * 1000)}
-          <a
-            href={'/' +
-              year +
-              '-' +
-              month.padStart(2, '0') +
-              '-' +
-              (+day + 1).toString().padStart(2, '0')}
-            data-sveltekit-reload>-&gt;</a
-          >
-        {/if}
+        {#if page.params.puzzleDate && !(new Date(page.params.puzzleDate).getTime() >= new Date().getTime() - 24 * 60 * 60 * 1000)}{/if}
       </h1>
     </div>
     <div class="column">
@@ -438,7 +419,7 @@
         {/if}
       </div>
     {:else if puzzle}
-      <div class="puzzle">
+      <div class="puzzle" id="puzzle">
         {#each content as row}
           {#each row as cell}
             <span class="cell">
@@ -458,10 +439,18 @@
           <br />
         {/each}
       </div>
+    {:else if page.params.puzzleDate && new Date(page.params.puzzleDate).getTime() && new Date(page.params.puzzleDate).getTime() < new Date().getTime()}
+      <h1>
+        There is no puzzle for this day, We are still backdating our puzzles, please be patient
+      </h1>
+    {:else if page.params.puzzleDate && new Date(page.params.puzzleDate).getTime()}
+      <h1>This page is for a puzzle that is not yet been posted</h1>
+    {:else}
+      <h1>This link does not follow the format 'yyyy-mm-dd' (like 2026-05-07)</h1>
     {/if}
     <br />
     <hr />
-    {#if !loginDiv}
+    {#if !loginDiv && !regDiv}
       <div class="bottomSection">
         <div class="leftCell">Move Count - {moveCount}</div>
         <div class="rightCell">

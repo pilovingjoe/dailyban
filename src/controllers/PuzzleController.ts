@@ -4,6 +4,7 @@ import { GetPuzzleSchema, CreatePuzzleSchema } from '../validators/PuzzleValidat
 import {
   getAllPuzzles,
   getPuzzleByDate,
+  deletePuzzleByDate,
   addPuzzle,
   getPuzzleAttemptsDate,
 } from '../models/PuzzleModel.js';
@@ -106,6 +107,29 @@ export async function getPuzzleAttempts(req: Request, res: Response): Promise<vo
       return;
     }
     res.json(puzzle.attempts);
+  } catch (err) {
+    console.error(err);
+    const databaseErrorMessage = parseDatabaseError(err);
+    res.status(500).json(databaseErrorMessage);
+  }
+}
+
+export async function deletePuzzle(req: Request, res: Response): Promise<void> {
+  const result = GetPuzzleSchema.safeParse(req.params);
+  if (!result.success) {
+    res.status(400).json({ erorr: result.error });
+    return;
+  }
+
+  const puzzleDate = new Date(result.data.date);
+  try {
+    const puzzle = await getPuzzleByDate(puzzleDate);
+    if (!puzzle) {
+      res.status(404).json({ error: 'Puzzle not found' });
+      return;
+    }
+    await deletePuzzleByDate(puzzleDate);
+    res.sendStatus(204);
   } catch (err) {
     console.error(err);
     const databaseErrorMessage = parseDatabaseError(err);
