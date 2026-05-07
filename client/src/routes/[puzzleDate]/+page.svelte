@@ -4,6 +4,11 @@
   import { api } from '$lib/api';
   import { toast } from '$lib/toast.svelte';
   import { onMount } from 'svelte';
+  import wallUrl from '$lib/img/wall.png';
+  import boxUrl from '$lib/img/box.png';
+  import playerUrl from '$lib/img/player.png';
+  import targetUrl from '$lib/img/target.png';
+  import targetBoxUrl from '$lib/img/targetBox.png';
 
   interface Puzzle {
     puzzleId: string;
@@ -11,14 +16,28 @@
     content: string;
   }
   //These values are used to encode the puzzle
-  const EMP = ' ';
-  const WALL = '■';
-  const BOX = '▧';
-  const TARGET = '⤬';
-  const TARGETBOX = '🙫';
-  const PLAYER = '🧍';
-  const PLAYERTARG = 'o';
+  const EMP = 0;
+  const WALL = 1;
+  const BOX = 2;
+  const TARGET = 3;
+  const TARGETBOX = 4;
+  const PLAYER = 5;
+  const PLAYERTARG = 6;
   let moveCount: number = $state(0);
+
+  let avgScore = $state(-1);
+  let avgTime = $state(-1);
+  let numCompleted = $state(0);
+  let date: string | undefined = $state();
+  let year: string = $state('');
+  let month: string = $state('');
+  let day: string = $state('');
+
+  if (auth.user) {
+    numCompleted = auth.user.numCompleted;
+    avgScore = auth.user.averageScore;
+    avgTime = auth.user.averageTime;
+  }
 
   let email = $state('');
   let password = $state('');
@@ -29,7 +48,7 @@
   let startTime = new Date();
   let time = $state(startTime);
   let puzzle: Puzzle | null = $state(null);
-  let content: string[][] = $state([]);
+  let content: number[][] = $state([]);
   let pos = { x: 0, y: 0 };
   initInput();
 
@@ -148,14 +167,25 @@
       // let firstAttempt = await api.get<boolean>('/puzzles/'+userId);
       let firstAttempt = false;
 
-      let result = await api.post('/attempts/' + userId + '/' + puzzleId, {moveCount, timeSpent, firstAttempt });
-      if(!result.ok){
+      let result = await api.post('/attempts/' + userId + '/' + puzzleId, {
+        moveCount,
+        timeSpent,
+        firstAttempt,
+      });
+      if (!result.ok) {
         toast.error('Unable to create an attempt');
         return;
       }
-      toast.success("Successful attempt added");
-      content=[];
-      let row: string[] = [];
+      toast.success('Successful attempt added');
+      avgTime = (avgTime * numCompleted + timeSpent) / (numCompleted + 1);
+      avgScore = (avgScore * numCompleted + moveCount) / (numCompleted + 1);
+      numCompleted++;
+    } else {
+      toast.info('Puzzle completed, but attempt not logged, login to save scores');
+    }
+    if (puzzle) {
+      content = [];
+      let row: number[] = [];
       let x = 0;
       let y = 0;
       for (var char of puzzle.content) {
@@ -179,8 +209,6 @@
         }
       }
       content.push(row);
-    } else {
-      toast.error('Failed to load puzzle');
     }
   }
 
@@ -216,6 +244,11 @@
     }
     toast.success('Logged in!');
     regDiv = false;
+    if (auth.user) {
+      numCompleted = auth.user.numCompleted;
+      avgScore = auth.user.averageScore;
+      avgTime = auth.user.averageTime;
+    }
     auth.refresh();
   }
 
@@ -235,6 +268,12 @@
     }
     toast.success('Logged in!');
     loginDiv = false;
+    if (auth.user) {
+      numCompleted = auth.user.numCompleted;
+      avgScore = auth.user.averageScore;
+      avgTime = auth.user.averageTime;
+    }
+
     auth.refresh();
   }
 
@@ -250,12 +289,18 @@
   });
 
   onMount(async () => {
-    const date = page.params.puzzleDate;
+    date = page.params.puzzleDate;
+    if (date) {
+      let temp: string[] = date.split('-');
+      year = temp[0];
+      month = temp[1];
+      day = temp[2];
+    }
     const result = await api.get<Puzzle>(`/puzzles/${date}`);
 
     if (result.ok) {
       puzzle = result.data;
-      let row: string[] = [];
+      let row: number[] = [];
       let x = 0;
       let y = 0;
       for (var char of puzzle.content) {
@@ -288,15 +333,33 @@
 <div class="holy-grail-grid">
   <header class="header">
     <div class="column">
-      <a href="https://www.github.com/pilovingjoe">Github</a>
-      <br/>
+      <a href="https://www.github.com/pilovingjoe/dailyban">Github</a>
+      <br />
       <a href="/calendar">Calendar</a>
     </div>
     <div class="column" style="width:50%">
       <h1>
-        <a href="https://www.google.com">&lt;-</a
-        >&Tab;{startTime.getUTCFullYear()}-{startTime.getUTCMonth() +
-          1}-{startTime.getUTCDate()}&Tab;<a href="https://www.google.com">-></a>
+        <a
+          href={'/' +
+            year +
+            '-' +
+            month.padStart(2, '0') +
+            '-' +
+            (+day - 1).toString().padStart(2, '0')}
+          data-sveltekit-reload>&lt;-</a
+        >
+        &Tab; {date} &Tab;
+        {#if page.params.puzzleDate && !(new Date(page.params.puzzleDate).getTime() >= new Date().getTime() - 24 * 60 * 60 * 1000)}
+          <a
+            href={'/' +
+              year +
+              '-' +
+              month.padStart(2, '0') +
+              '-' +
+              (+day + 1).toString().padStart(2, '0')}
+            data-sveltekit-reload>-&gt;</a
+          >
+        {/if}
       </h1>
     </div>
     <div class="column">
@@ -379,7 +442,17 @@
         {#each content as row}
           {#each row as cell}
             <span class="cell">
-              {cell}
+              {#if cell == WALL}
+                <img src={wallUrl} alt="wall" />
+              {:else if cell == BOX}
+                <img src={boxUrl} alt="box" />
+              {:else if cell == TARGET}
+                <img src={targetUrl} alt="target" />
+              {:else if cell == TARGETBOX}
+                <img src={targetBoxUrl} alt="box on target" />
+              {:else if cell == PLAYER || cell == PLAYERTARG}
+                <img src={playerUrl} alt="player" />
+              {/if}
             </span>
           {/each}
           <br />
@@ -398,13 +471,19 @@
     {/if}
   </main>
 
-  <aside class="left-sidebar">Leaderboards go here</aside>
+  <aside class="left-sidebar">
+    <!-- Leaderboards go here -->
+  </aside>
   <aside class="right-sidebar">
     {#if auth.user}
       <h2>Welcome {auth.user.displayName}</h2>
-      <!-- <p>Average move count: {auth.user.averageScore}</p> -->
-      <!-- <p>Average time taken: {auth.user.averageTime}</p> -->
-      <!-- <p>Number of puzzles completed: {auth.user.numCompleted}</p> -->
+      {#if avgScore == -1}
+        <p>Do some puzzles and your stats will show up here!</p>
+      {:else}
+        <p>Average move count: {avgScore}</p>
+        <p>Average time taken: {avgTime}</p>
+        <p>Number of puzzles completed: {numCompleted}</p>
+      {/if}
     {/if}
   </aside>
 </div>

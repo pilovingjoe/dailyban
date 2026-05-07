@@ -24,6 +24,16 @@
   const PLAYERTARG = 6;
   let moveCount: number = $state(0);
 
+  let avgScore = $state(-1);
+  let avgTime = $state(-1);
+  let numCompleted = $state(0);
+
+  if (auth.user) {
+    numCompleted = auth.user.numCompleted;
+    avgScore = auth.user.averageScore;
+    avgTime = auth.user.averageTime;
+  }
+
   let email = $state('');
   let password = $state('');
   let displayName = $state('');
@@ -162,6 +172,13 @@
         return;
       }
       toast.success('Successful attempt added');
+      avgTime = (avgTime * numCompleted + timeSpent) / (numCompleted + 1);
+      avgScore = (avgScore * numCompleted + moveCount) / (numCompleted + 1);
+      numCompleted++;
+    } else {
+      toast.info('Puzzle completed, but attempt not logged, login to save scores');
+    }
+    if (puzzle) {
       content = [];
       let row: number[] = [];
       let x = 0;
@@ -187,8 +204,6 @@
         }
       }
       content.push(row);
-    } else {
-      toast.error('Failed to load puzzle');
     }
   }
 
@@ -224,6 +239,11 @@
     }
     toast.success('Logged in!');
     regDiv = false;
+    if (auth.user) {
+      numCompleted = auth.user.numCompleted;
+      avgScore = auth.user.averageScore;
+      avgTime = auth.user.averageTime;
+    }
     auth.refresh();
   }
 
@@ -243,6 +263,12 @@
     }
     toast.success('Logged in!');
     loginDiv = false;
+    if (auth.user) {
+      numCompleted = auth.user.numCompleted;
+      avgScore = auth.user.averageScore;
+      avgTime = auth.user.averageTime;
+    }
+
     auth.refresh();
   }
 
@@ -294,11 +320,24 @@
 
 <div class="holy-grail-grid">
   <header class="header">
-    <div class="column"><a href="https://www.github.com/pilovingjoe">Github</a></div>
+    <div class="column">
+      <a href="https://www.github.com/pilovingjoe">Github</a>
+      <br/>
+      <a href="/calendar">Calendar</a>
+    </div>
     <div class="column" style="width:50%">
       <h1>
-        <a href="https://www.google.com">&lt;-</a
-        >&Tab;{startTime.getUTCFullYear()}-{startTime.getUTCMonth() + 1}-{startTime.getUTCDate()}
+        <a
+          href={'/' +
+            time.getUTCFullYear() +
+            '-' +
+            (time.getUTCMonth() + 1).toString().padStart(2, '0') +
+            '-' +
+            (time.getUTCDate() - 1).toString().padStart(2, '0')}
+          data-sveltekit-reload>&lt;-</a
+        >&Tab;{startTime.getUTCFullYear()}-{(startTime.getUTCMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-{startTime.getUTCDate().toString().padStart(2, '0')}
       </h1>
     </div>
     <div class="column">
@@ -381,20 +420,20 @@
         {#each content as row}
           {#each row as cell}
             <span class="cell">
-              {#if (cell == WALL)}
+              {#if cell == WALL}
                 <img src={wallUrl} alt="wall" />
-              {:else if (cell ==BOX)}
+              {:else if cell == BOX}
                 <img src={boxUrl} alt="box" />
-              {:else if (cell ==TARGET)}
+              {:else if cell == TARGET}
                 <img src={targetUrl} alt="target" />
-              {:else if (cell ==TARGETBOX)}
+              {:else if cell == TARGETBOX}
                 <img src={targetBoxUrl} alt="box on target" />
-              {:else if (cell ==PLAYER||cell==PLAYERTARG)}
+              {:else if cell == PLAYER || cell == PLAYERTARG}
                 <img src={playerUrl} alt="player" />
               {/if}
             </span>
           {/each}
-          <br/>
+          <br />
         {/each}
       </div>
     {/if}
@@ -410,13 +449,19 @@
     {/if}
   </main>
 
-  <aside class="left-sidebar">Leaderboards go here</aside>
+  <aside class="left-sidebar">
+    <!-- Leaderboards go here -->
+  </aside>
   <aside class="right-sidebar">
     {#if auth.user}
       <h2>Welcome {auth.user.displayName}</h2>
-      <!-- <p>Average move count: {auth.user.averageScore}</p> -->
-      <!-- <p>Average time taken: {auth.user.averageTime}</p> -->
-      <!-- <p>Number of puzzles completed: {auth.user.numCompleted}</p> -->
+      {#if avgScore == -1}
+        <p>Do some puzzles and your stats will show up here!</p>
+      {:else}
+        <p>Average move count: {avgScore}</p>
+        <p>Average time taken: {avgTime}</p>
+        <p>Number of puzzles completed: {numCompleted}</p>
+      {/if}
     {/if}
   </aside>
 </div>

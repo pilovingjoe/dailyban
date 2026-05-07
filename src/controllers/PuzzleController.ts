@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Puzzle } from '../entities/Puzzle.js'
+import { Puzzle } from '../entities/Puzzle.js';
 import { GetPuzzleSchema, CreatePuzzleSchema } from '../validators/PuzzleValidator.js';
 import {
   getAllPuzzles,
@@ -29,6 +29,9 @@ export async function getPuzzle(req: Request, res: Response): Promise<void> {
   }
 
   const puzzleDate = new Date(result.data.date);
+  if (puzzleDate > new Date()) {
+    res.status(403);
+  }
   try {
     const puzzle = await getPuzzleByDate(puzzleDate);
 

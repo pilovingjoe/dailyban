@@ -2,7 +2,7 @@ import { AppDataSource } from '../dataSource.js';
 import { Attempt } from '../entities/Attempt.js';
 // import { Puzzle } from '../entities/Puzzle.js';
 // import { User } from '../entities/User.js';
-import { userRepository } from './UserModel.js';
+import { userRepository, computeAvgs } from './UserModel.js';
 import { puzzleRepository } from './PuzzleModel.js';
 // import { leaderboardRepository } from 'LeaderboardModel.js';
 
@@ -45,11 +45,4 @@ export async function addAttempt(
   }
   //newPuzzle.leaderboard = new Leaderboard(); add when leaderboards work
   return attemptRepository.save(newAttempt);
-}
-async function computeAvgs(userId: string, moveCount: number, solveTime: number): Promise<void> {
-  const user = await userRepository.findOne({ where: { userId } });
-  const numComplete = user.numCompleted;
-  user.averageScore = (user.averageScore * numComplete + moveCount) / (numComplete + 1);
-  user.averageTime = (user.averageTime * numComplete + solveTime) / (numComplete + 1);
-  user.numCompleted++;
 }

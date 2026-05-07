@@ -38,3 +38,16 @@ export async function addUser(
 
   return userRepository.save(newUser);
 }
+
+export async function computeAvgs(
+  userId: string,
+  moveCount: number,
+  solveTime: number,
+): Promise<void> {
+  const user = await userRepository.findOne({ where: { userId } });
+  const numComplete = user.numCompleted;
+  user.averageScore = (user.averageScore * numComplete + moveCount) / (numComplete + 1);
+  user.averageTime = (user.averageTime * numComplete + solveTime) / (numComplete + 1);
+  user.numCompleted++;
+  userRepository.save(user);
+}
