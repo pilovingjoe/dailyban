@@ -42,15 +42,17 @@ app.use(express.static('frontend/build'));
 // -- Routes --------------------------------------------------
 // Register your routes below this line
 
+//Adding and deleting puzzles should be done through the DB manually, so I have disabled those endpoints
+
 app.post('/api/users', registerUser);
 app.post('/api/login', logIn);
 app.delete('/api/sessions', logOut);
 app.get('/api/me', getMe);
 app.get('/api/users/:userId', getUserProfile);
-app.post('/api/puzzles/', createPuzzle);
+// app.post('/api/puzzles/', createPuzzle);
 app.get('/api/puzzles/today', getTodaysPuzzle);
 app.get('/api/puzzles/:date', getPuzzle);
-app.delete('/api/puzzles/:date', deletePuzzle);
+// app.delete('/api/puzzles/:date', deletePuzzle);
 app.get('/api/puzzles/', getPuzzles);
 app.post('/api/attempts/:userId/:puzzleId', createAttempt);
 app.get('/api/attempts/:attemptId', getAttempt);
