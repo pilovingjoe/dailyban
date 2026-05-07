@@ -108,12 +108,22 @@ main.container {
   float: bottom;
   height: 80%;
 }
+.navBut {
+  color:#11111b;
+  background-color: #f2cdcd;
+}
 .calendar {
   font-size: 10pt;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 12px;
+}
+.nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
 }
 .month {
   backGround:#6c7086;

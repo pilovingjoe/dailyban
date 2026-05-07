@@ -28,12 +28,6 @@
   let avgTime = $state(-1);
   let numCompleted = $state(0);
 
-  if (auth.user) {
-    numCompleted = auth.user.numCompleted;
-    avgScore = auth.user.averageScore;
-    avgTime = auth.user.averageTime;
-  }
-
   let email = $state('');
   let password = $state('');
   let displayName = $state('');
@@ -47,8 +41,41 @@
   let pos = { x: 0, y: 0 };
   initInput();
 
+  function resetPuzzle(){
+    if (puzzle) {
+      content = [];
+      let row: number[] = [];
+      let x = 0;
+      let y = 0;
+      moveCount = 0;
+      startTime = new Date();
+      for (var char of puzzle.content) {
+        if (char === '\n') {
+          content.push(row);
+          y++;
+          row = [];
+          x = 0;
+        } else {
+          if (char === '_') row.push(EMP);
+          if (char === '#') row.push(WALL);
+          if (char === 'B') row.push(BOX);
+          if (char === 'X') row.push(TARGET);
+          if (char === '*') row.push(TARGETBOX);
+          if (char === 'P') {
+            row.push(PLAYER);
+            pos.x = x;
+            pos.y = y;
+          }
+          x++;
+        }
+      }
+      content.push(row);
+    }
+
+  }
+
   function move(dir: number) {
-    // move right
+    //move right
     if (dir === 1) {
       let next = content[pos.x][pos.y + 1];
       let nextNext = content[pos.x][pos.y + 2];
@@ -72,7 +99,7 @@
         pos.y++;
       }
     }
-    // move down
+    //move down
     else if (dir === 2) {
       let next = content[pos.x + 1][pos.y];
       let nextNext = content[pos.x + 2][pos.y];
@@ -216,6 +243,7 @@
       if (event.key == 's') move(2);
       if (event.key == 'a') move(3);
       if (event.key == 'w') move(4);
+      if (event.key == 'r') resetPuzzle();
     });
   }
 
@@ -287,6 +315,11 @@
   });
 
   onMount(async () => {
+    if (auth.user) {
+      numCompleted = auth.user.numCompleted;
+      avgScore = auth.user.averageScore;
+      avgTime = auth.user.averageTime;
+    }
     const result = await api.get<Puzzle>('/puzzles/today');
 
     if (result.ok) {
@@ -325,7 +358,7 @@
   <header class="header">
     <div class="column">
       <a href="https://www.github.com/pilovingjoe">Github</a>
-      <br/>
+      <br />
       <a href="/calendar">Calendar</a>
     </div>
     <div class="column" style="width:50%">
@@ -340,6 +373,7 @@
         <button
           class="loginButton"
           type="button"
+          style="background-color: #f38ba8"
           onclick={async () => {
             await api.del('/sessions');
             auth.setUser(null);
@@ -438,7 +472,7 @@
       <div class="bottomSection">
         <div class="leftCell">Move Count - {moveCount}</div>
         <div class="rightCell">
-          Time - {Math.floor((time.getTime() - startTime.getTime()) / 1000)} seconds
+          Time - {Math.max(Math.floor((time.getTime() - startTime.getTime()) / 1000),0)} seconds
         </div>
       </div>
     {/if}
@@ -446,6 +480,62 @@
 
   <aside class="left-sidebar">
     <!-- Leaderboards go here -->
+    {#if !loginDiv && !regDiv}
+      <div class="nav">
+        <button
+          type="button"
+          class="navBut"
+          style="grid-column-start: 2;"
+          onclick={() => {
+            move(4);
+          }}>Up</button
+        >
+        <br />
+        <button
+          type="button"
+          class="navBut"
+          style="grid-row-start: 2;"
+          onclick={() => {
+            move(3);
+          }}>Left</button
+        >
+        <button
+          type="button"
+          class="navBut"
+          style="
+          grid-column-start: 3;
+          grid-row-start: 2;
+        "
+          onclick={() => {
+            move(1);
+          }}>Right</button
+        >
+        <br />
+        <button
+          type="button"
+          class="navBut"
+          style="
+          grid-column-start: 2;
+          grid-row-start: 3;
+        "
+          onclick={() => {
+            move(2);
+          }}>Down</button
+        >
+      </div>
+      <br />
+      <br />
+      <button
+        type="button"
+        class="navBut"
+        style="
+          background-color: #f38ba8
+        "
+        onclick={() => {
+          resetPuzzle();
+        }}>Reset</button
+      >
+    {/if}
   </aside>
   <aside class="right-sidebar">
     {#if auth.user}

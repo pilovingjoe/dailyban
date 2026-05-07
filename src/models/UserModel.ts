@@ -46,8 +46,8 @@ export async function computeAvgs(
 ): Promise<void> {
   const user = await userRepository.findOne({ where: { userId } });
   const numComplete = user.numCompleted;
-  user.averageScore = (user.averageScore * numComplete + moveCount) / (numComplete + 1);
-  user.averageTime = (user.averageTime * numComplete + solveTime) / (numComplete + 1);
+  user.averageScore = Math.floor((user.averageScore * numComplete + moveCount) / (numComplete + 1));
+  user.averageTime = Math.floor((user.averageTime * numComplete + solveTime) / (numComplete + 1));
   user.numCompleted++;
   userRepository.save(user);
 }
