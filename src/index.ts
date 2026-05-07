@@ -50,12 +50,12 @@ app.get('/api/users/:userId', getUserProfile);
 app.post('/api/puzzles/', createPuzzle);
 app.get('/api/puzzles/today', getTodaysPuzzle);
 app.get('/api/puzzles/:date', getPuzzle);
+app.delete('/api/puzzles/:date', deletePuzzle);
 app.get('/api/puzzles/', getPuzzles);
 app.post('/api/attempts/:userId/:puzzleId', createAttempt);
 app.get('/api/attempts/:attemptId', getAttempt);
 app.get('/api/attempts/user/:userId', getUserAttempts);
 app.get('/api/attempts/puzzle/:date', getPuzzleAttempts);
-app.delete('/api/puzzles/:date', deletePuzzle);
 
 app.patch('/api/leaderboards/:leaderboardId/:attemptId', updateLeaderboard);
 app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);
