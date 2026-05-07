@@ -60,13 +60,15 @@ main.container {
 .puzzle {
   text-align: center;
   font-size: 30px;
+  line-height:0;
 }
 .cell {
   display: inline-block;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
+  line-height:0;
 }
 .sessionMgmt {
   text-align: center;

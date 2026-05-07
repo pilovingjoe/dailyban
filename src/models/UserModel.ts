@@ -33,6 +33,7 @@ export async function addUser(
   newUser.displayName = displayName;
   newUser.averageScore = -1;
   newUser.averageTime = -1;
+  newUser.numCompleted = 0;
   // userId is generated automatically by @BeforeInsert
 
   return userRepository.save(newUser);

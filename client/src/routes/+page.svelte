@@ -3,6 +3,11 @@
   import { api } from '$lib/api';
   import { toast } from '$lib/toast.svelte';
   import { onMount } from 'svelte';
+  import wallUrl from '$lib/img/wall.png';
+  import boxUrl from '$lib/img/box.png';
+  import playerUrl from '$lib/img/player.png';
+  import targetUrl from '$lib/img/target.png';
+  import targetBoxUrl from '$lib/img/targetBox.png';
 
   interface Puzzle {
     puzzleId: string;
@@ -10,13 +15,13 @@
     content: string;
   }
   //These values are used to encode the puzzle
-  const EMP = ' ';
-  const WALL = '■';
-  const BOX = '▧';
-  const TARGET = '⤬';
-  const TARGETBOX = '🙫';
-  const PLAYER = '🧍';
-  const PLAYERTARG = 'o';
+  const EMP = 0;
+  const WALL = 1;
+  const BOX = 2;
+  const TARGET = 3;
+  const TARGETBOX = 4;
+  const PLAYER = 5;
+  const PLAYERTARG = 6;
   let moveCount: number = $state(0);
 
   let email = $state('');
@@ -28,7 +33,7 @@
   let startTime = new Date();
   let time = $state(startTime);
   let puzzle: Puzzle | null = $state(null);
-  let content: string[][] = $state([]);
+  let content: number[][] = $state([]);
   let pos = { x: 0, y: 0 };
   initInput();
 
@@ -146,8 +151,6 @@
       let timeSpent = Math.floor((time.getTime() - startTime.getTime()) / 1000);
       // let firstAttempt = await api.get<boolean>('/puzzles/'+userId);
       let firstAttempt = false;
-      toast.info('userId - ' + userId);
-      toast.info('puzzleId - ' + puzzleId);
 
       let result = await api.post('/attempts/' + userId + '/' + puzzleId, {
         moveCount,
@@ -160,7 +163,7 @@
       }
       toast.success('Successful attempt added');
       content = [];
-      let row: string[] = [];
+      let row: number[] = [];
       let x = 0;
       let y = 0;
       for (var char of puzzle.content) {
@@ -259,7 +262,7 @@
 
     if (result.ok) {
       puzzle = result.data;
-      let row: string[] = [];
+      let row: number[] = [];
       let x = 0;
       let y = 0;
       for (var char of puzzle.content) {
@@ -378,10 +381,20 @@
         {#each content as row}
           {#each row as cell}
             <span class="cell">
-              {cell}
+              {#if (cell == WALL)}
+                <img src={wallUrl} alt="wall" />
+              {:else if (cell ==BOX)}
+                <img src={boxUrl} alt="box" />
+              {:else if (cell ==TARGET)}
+                <img src={targetUrl} alt="target" />
+              {:else if (cell ==TARGETBOX)}
+                <img src={targetBoxUrl} alt="box on target" />
+              {:else if (cell ==PLAYER||cell==PLAYERTARG)}
+                <img src={playerUrl} alt="player" />
+              {/if}
             </span>
           {/each}
-          <br />
+          <br/>
         {/each}
       </div>
     {/if}
