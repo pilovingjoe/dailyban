@@ -15,7 +15,6 @@ import {
   getPuzzles,
   createPuzzle,
   getPuzzleAttempts,
-  deletePuzzle,
 } from './controllers/PuzzleController.js';
 import { createAttempt, getAttempt } from './controllers/AttemptController.js';
 
@@ -42,14 +41,14 @@ app.use(express.static('frontend/build'));
 // -- Routes --------------------------------------------------
 // Register your routes below this line
 
-//Adding and deleting puzzles should be done through the DB manually, so I have disabled those endpoints
+//Deleting puzzles should be done through the DB manually, so I have disabled that endpoints
 
 app.post('/api/users', registerUser);
 app.post('/api/login', logIn);
 app.delete('/api/sessions', logOut);
 app.get('/api/me', getMe);
 app.get('/api/users/:userId', getUserProfile);
-// app.post('/api/puzzles/', createPuzzle);
+app.post('/api/puzzles/', createPuzzle);
 app.get('/api/puzzles/today', getTodaysPuzzle);
 app.get('/api/puzzles/:date', getPuzzle);
 // app.delete('/api/puzzles/:date', deletePuzzle);
@@ -64,6 +63,8 @@ app.get('/api/leaderboards/:date/speed/top', getTopSpeeds);
 app.get('/api/leaderboards/:date/moveCount/top', getTopMoveCounts);
 app.get('/api/leaderboards/:date/speed/near', getNearbySpeeds);
 app.get('/api/leaderboards/:date/moveCount/near', getNearbyMoves);
+
+console.log(process.env.ADMIN_PASSWORD);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on http://localhost:${process.env.PORT}`);

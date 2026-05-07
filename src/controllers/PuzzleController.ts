@@ -74,7 +74,10 @@ export async function createPuzzle(req: Request, res: Response): Promise<void> {
     return;
   }
 
-  const { content, minMoves, date } = result.data;
+  const { content, minMoves, date, adminPass } = result.data;
+  if (adminPass != process.env.ADMIN_PASSWORD) {
+    res.status(403);
+  }
 
   try {
     const realDate = new Date(date);
